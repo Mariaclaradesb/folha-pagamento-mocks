@@ -1,5 +1,6 @@
 package com.example.folhapagamento.controller;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -20,6 +21,12 @@ public class ApiExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public ProblemDetail tratarValidacao(IllegalArgumentException exception) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, exception.getMessage());
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ProblemDetail tratarConflitoDeIntegridade() {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT,
+                "Operação não permitida: o registro possui vínculos com outros dados, como folhas de pagamento.");
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
