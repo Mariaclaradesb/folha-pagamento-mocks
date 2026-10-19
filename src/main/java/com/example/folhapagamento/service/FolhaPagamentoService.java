@@ -1,5 +1,6 @@
 package com.example.folhapagamento.service;
 
+import com.example.folhapagamento.config.FolhaProperties;
 import com.example.folhapagamento.model.FolhaPagamento;
 import com.example.folhapagamento.model.Funcionario;
 import com.example.folhapagamento.repository.FolhaPagamentoRepository;
@@ -14,17 +15,15 @@ import java.util.NoSuchElementException;
 @Service
 public class FolhaPagamentoService {
 
-    // Regras fictícias, usadas apenas para estudo.
-    private static final BigDecimal ALIQUOTA_INSS = new BigDecimal("0.10");
-    private static final BigDecimal ALIQUOTA_IR = new BigDecimal("0.05");
-    private static final BigDecimal ISENCAO_IR = new BigDecimal("2000.00");
-
     private final FuncionarioService funcionarioService;
     private final FolhaPagamentoRepository repository;
+    private final FolhaProperties propriedades;
 
-    public FolhaPagamentoService(FuncionarioService funcionarioService, FolhaPagamentoRepository repository) {
+    public FolhaPagamentoService(FuncionarioService funcionarioService, FolhaPagamentoRepository repository,
+                                 FolhaProperties propriedades) {
         this.funcionarioService = funcionarioService;
         this.repository = repository;
+        this.propriedades = propriedades;
     }
 
     public FolhaPagamento gerar(Long funcionarioId, YearMonth periodo) {
@@ -76,14 +75,14 @@ public class FolhaPagamentoService {
 
     public BigDecimal calcularInss(BigDecimal salarioBruto) {
         validarValor(salarioBruto);
-        return arredondar(salarioBruto.multiply(ALIQUOTA_INSS));
+        return arredondar(salarioBruto.multiply(propriedades.aliquotaInss()));
     }
 
     public BigDecimal calcularImpostoRenda(BigDecimal salarioBruto, BigDecimal descontoInss) {
         validarValor(salarioBruto);
         validarValor(descontoInss);
-        BigDecimal baseTributavel = salarioBruto.subtract(descontoInss).subtract(ISENCAO_IR);
-        return arredondar(baseTributavel.max(BigDecimal.ZERO).multiply(ALIQUOTA_IR));
+        BigDecimal baseTributavel = salarioBruto.subtract(descontoInss).subtract(propriedades.isencaoIr());
+        return arredondar(baseTributavel.max(BigDecimal.ZERO).multiply(propriedades.aliquotaIr()));
     }
 
     public BigDecimal calcularTotalDescontos(BigDecimal inss, BigDecimal impostoRenda) {

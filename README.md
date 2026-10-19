@@ -80,7 +80,7 @@ Cadastros e gerações retornam `201` com `Location`; exclusões retornam `204`.
 
 Nome e cargo são obrigatórios; o salário-base deve ser de pelo menos R$ 0,01 e o percentual de reajuste deve ser positivo. Valores usam `BigDecimal`, duas casas decimais e arredondamento `HALF_UP`.
 
-O bruto equivale ao salário-base mensal. O INSS é 10% do bruto. O IR é 5% da parcela que exceder R$ 2.000,00 após o INSS. O líquido é o bruto menos os dois descontos. Essas regras são fictícias. Cada geração cria um registro, inclusive para o mesmo funcionário e período. Alterar ou excluir o funcionário preserva as folhas já geradas.
+O bruto equivale ao salário-base mensal. O INSS é 10% do bruto. O IR é 5% da parcela que exceder R$ 2.000,00 após o INSS. O líquido é o bruto menos os dois descontos. Essas regras são fictícias e os valores podem ser alterados pelas variáveis de ambiente `FOLHA_ALIQUOTA_INSS` (padrão `0.10`), `FOLHA_ALIQUOTA_IR` (padrão `0.05`) e `FOLHA_ISENCAO_IR` (padrão `2000.00`). Cada geração cria um registro, inclusive para o mesmo funcionário e período. Alterar ou excluir o funcionário preserva as folhas já geradas.
 
 ## Preparação para mocks
 
