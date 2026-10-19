@@ -28,7 +28,7 @@ public class FolhaPagamentoService {
     }
 
     public FolhaPagamento gerar(Long funcionarioId, YearMonth periodo) {
-        return repository.salvar(simular(funcionarioId, periodo));
+        return repository.save(simular(funcionarioId, periodo));
     }
 
     public FolhaPagamento simular(Long funcionarioId, YearMonth periodo) {
@@ -45,23 +45,23 @@ public class FolhaPagamentoService {
         if (id == null || id <= 0) {
             throw new IllegalArgumentException("Identificador deve ser positivo");
         }
-        return repository.buscarPorId(id)
+        return repository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Folha de pagamento não encontrada: " + id));
     }
 
     public List<FolhaPagamento> listarPorFuncionario(Long funcionarioId) {
         funcionarioService.buscarPorId(funcionarioId);
-        return repository.buscarPorFuncionarioId(funcionarioId);
+        return repository.findByFuncionarioIdOrderByIdAsc(funcionarioId);
     }
 
     public List<FolhaPagamento> listarPorPeriodo(YearMonth periodo) {
         validarPeriodo(periodo);
-        return repository.buscarPorPeriodo(periodo);
+        return repository.findByPeriodoOrderByIdAsc(periodo);
     }
 
     public BigDecimal calcularTotalLiquido(YearMonth periodo) {
         BigDecimal total = listarPorPeriodo(periodo).stream()
-                .map(FolhaPagamento::salarioLiquido)
+                .map(FolhaPagamento::getSalarioLiquido)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         return arredondar(total);
     }
@@ -70,8 +70,8 @@ public class FolhaPagamentoService {
         if (funcionario == null) {
             throw new IllegalArgumentException("Funcionário é obrigatório");
         }
-        validarValor(funcionario.salarioBase());
-        return arredondar(funcionario.salarioBase());
+        validarValor(funcionario.getSalarioBase());
+        return arredondar(funcionario.getSalarioBase());
     }
 
     public BigDecimal calcularInss(BigDecimal salarioBruto) {

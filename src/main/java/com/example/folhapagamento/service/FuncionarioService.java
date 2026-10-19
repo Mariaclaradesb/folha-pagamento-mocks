@@ -2,6 +2,7 @@ package com.example.folhapagamento.service;
 
 import com.example.folhapagamento.model.Funcionario;
 import com.example.folhapagamento.repository.FuncionarioRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -19,30 +20,30 @@ public class FuncionarioService {
     }
 
     public Funcionario cadastrar(Funcionario funcionario) {
-        return repository.salvar(prepararFuncionario(null, funcionario));
+        return repository.save(prepararFuncionario(null, funcionario));
     }
 
     public Funcionario buscarPorId(Long id) {
         if (id == null || id <= 0) {
             throw new IllegalArgumentException("Identificador deve ser positivo");
         }
-        return repository.buscarPorId(id)
+        return repository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Funcionário não encontrado: " + id));
     }
 
     public List<Funcionario> listar() {
-        return repository.listar();
+        return repository.findAll(Sort.by("id"));
     }
 
     public Funcionario editar(Long id, Funcionario funcionario) {
         Funcionario atualizado = prepararFuncionario(id, funcionario);
         buscarPorId(id);
-        return repository.salvar(atualizado);
+        return repository.save(atualizado);
     }
 
     public void remover(Long id) {
         buscarPorId(id);
-        repository.remover(id);
+        repository.deleteById(id);
     }
 
     public Funcionario reajustarSalario(Long id, BigDecimal percentual) {
@@ -51,35 +52,35 @@ public class FuncionarioService {
         }
         Funcionario funcionario = buscarPorId(id);
         BigDecimal fator = BigDecimal.ONE.add(percentual.movePointLeft(2));
-        BigDecimal novoSalario = funcionario.salarioBase().multiply(fator).setScale(2, RoundingMode.HALF_UP);
-        return repository.salvar(new Funcionario(id, funcionario.nome(), funcionario.cargo(), novoSalario));
+        BigDecimal novoSalario = funcionario.getSalarioBase().multiply(fator).setScale(2, RoundingMode.HALF_UP);
+        return repository.save(new Funcionario(id, funcionario.getNome(), funcionario.getCargo(), novoSalario));
     }
 
     public List<Funcionario> buscarPorCargo(String cargo) {
         if (cargo == null || cargo.isBlank()) {
             throw new IllegalArgumentException("Cargo é obrigatório");
         }
-        return repository.buscarPorCargo(cargo.strip());
+        return repository.findByCargoIgnoreCaseOrderByIdAsc(cargo.strip());
     }
 
     public List<Funcionario> buscarPorSalarioAbaixoDe(BigDecimal limite) {
         if (limite == null || limite.signum() <= 0) {
             throw new IllegalArgumentException("Limite salarial deve ser maior que zero");
         }
-        return repository.buscarPorSalarioAbaixoDe(limite);
+        return repository.findBySalarioBaseLessThanOrderByIdAsc(limite);
     }
 
     private Funcionario prepararFuncionario(Long id, Funcionario funcionario) {
-        if (funcionario == null || funcionario.nome() == null || funcionario.nome().isBlank()) {
+        if (funcionario == null || funcionario.getNome() == null || funcionario.getNome().isBlank()) {
             throw new IllegalArgumentException("Nome é obrigatório");
         }
-        if (funcionario.cargo() == null || funcionario.cargo().isBlank()) {
+        if (funcionario.getCargo() == null || funcionario.getCargo().isBlank()) {
             throw new IllegalArgumentException("Cargo é obrigatório");
         }
-        if (funcionario.salarioBase() == null || funcionario.salarioBase().compareTo(new BigDecimal("0.01")) < 0) {
+        if (funcionario.getSalarioBase() == null || funcionario.getSalarioBase().compareTo(new BigDecimal("0.01")) < 0) {
             throw new IllegalArgumentException("Salário-base deve ser de pelo menos R$ 0,01");
         }
-        return new Funcionario(id, funcionario.nome().strip(), funcionario.cargo().strip(),
-                funcionario.salarioBase().setScale(2, RoundingMode.HALF_UP));
+        return new Funcionario(id, funcionario.getNome().strip(), funcionario.getCargo().strip(),
+                funcionario.getSalarioBase().setScale(2, RoundingMode.HALF_UP));
     }
 }

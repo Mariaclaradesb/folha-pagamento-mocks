@@ -30,7 +30,7 @@ public class FolhaPagamentoController {
     @PostMapping
     public ResponseEntity<FolhaPagamento> gerar(@RequestBody GerarFolhaPagamentoRequest request) {
         FolhaPagamento folha = service.gerar(request.funcionarioId(), request.periodo());
-        return ResponseEntity.created(URI.create("/folhas-pagamento/" + folha.id())).body(folha);
+        return ResponseEntity.created(URI.create("/folhas-pagamento/" + folha.getId())).body(folha);
     }
 
     @PostMapping("/simulacao")

@@ -1,22 +1,14 @@
 package com.example.folhapagamento.repository;
 
 import com.example.folhapagamento.model.Funcionario;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
-public interface FuncionarioRepository {
+public interface FuncionarioRepository extends JpaRepository<Funcionario, Long> {
 
-    Funcionario salvar(Funcionario funcionario);
+    List<Funcionario> findByCargoIgnoreCaseOrderByIdAsc(String cargo);
 
-    Optional<Funcionario> buscarPorId(Long id);
-
-    List<Funcionario> listar();
-
-    List<Funcionario> buscarPorCargo(String cargo);
-
-    List<Funcionario> buscarPorSalarioAbaixoDe(BigDecimal limite);
-
-    void remover(Long id);
+    List<Funcionario> findBySalarioBaseLessThanOrderByIdAsc(BigDecimal limite);
 }

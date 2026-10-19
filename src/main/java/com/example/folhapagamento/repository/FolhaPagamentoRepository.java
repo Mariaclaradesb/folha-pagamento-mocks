@@ -1,18 +1,14 @@
 package com.example.folhapagamento.repository;
 
 import com.example.folhapagamento.model.FolhaPagamento;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.YearMonth;
 import java.util.List;
-import java.util.Optional;
 
-public interface FolhaPagamentoRepository {
+public interface FolhaPagamentoRepository extends JpaRepository<FolhaPagamento, Long> {
 
-    FolhaPagamento salvar(FolhaPagamento folha);
+    List<FolhaPagamento> findByFuncionarioIdOrderByIdAsc(Long funcionarioId);
 
-    Optional<FolhaPagamento> buscarPorId(Long id);
-
-    List<FolhaPagamento> buscarPorFuncionarioId(Long funcionarioId);
-
-    List<FolhaPagamento> buscarPorPeriodo(YearMonth periodo);
+    List<FolhaPagamento> findByPeriodoOrderByIdAsc(YearMonth periodo);
 }

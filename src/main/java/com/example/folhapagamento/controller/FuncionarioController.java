@@ -31,7 +31,7 @@ public class FuncionarioController {
     @PostMapping
     public ResponseEntity<Funcionario> cadastrar(@RequestBody Funcionario funcionario) {
         Funcionario salvo = service.cadastrar(funcionario);
-        return ResponseEntity.created(URI.create("/funcionarios/" + salvo.id())).body(salvo);
+        return ResponseEntity.created(URI.create("/funcionarios/" + salvo.getId())).body(salvo);
     }
 
     @GetMapping
