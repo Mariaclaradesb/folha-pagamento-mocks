@@ -4,3 +4,8 @@
 /.vscode/
 *.iml
 *.log
+/frontend/node_modules/
+/frontend/dist/
+/frontend/cypress/videos/
+/frontend/cypress/screenshots/
+/frontend/.dados-locais/

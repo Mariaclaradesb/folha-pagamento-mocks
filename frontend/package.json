@@ -1,0 +1,38 @@
+{
+  "name": "folha-pagamento-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc --noEmit && tsc -p cypress/tsconfig.json --noEmit && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --max-warnings 0",
+    "format": "prettier --write src cypress scripts *.ts *.js *.json index.html",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "check:backend": "node scripts/check-backend.mjs",
+    "e2e": "npm run check:backend && start-server-and-test dev http://localhost:5173 cypress:run"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.18.4"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^22.20.5",
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^6.1.2",
+    "cypress": "^16.2.0",
+    "eslint": "^10.13.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.13.0",
+    "prettier": "^3.9.10",
+    "start-server-and-test": "^3.0.13",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.72.0",
+    "vite": "^8.3.4"
+  }
+}
