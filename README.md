@@ -1,5 +1,25 @@
 Projeto referente a atividade 1 da disciplina Teste Automático de Software.
 
+## Testes do backend
+
+Requer Java 17 e Maven. Na raiz do repositório, execute os testes JUnit 5:
+
+```sh
+mvn test
+```
+
+Para executar os testes de mutação com o [PIT](https://pitest.org/quickstart/maven/):
+
+```sh
+mvn test-compile org.pitest:pitest-maven:mutationCoverage
+```
+
+O PIT altera temporariamente o bytecode e executa os testes existentes para verificar se detectam essas alterações. A análise inclui as classes de `com.example.folhapagamento`, exceto `FolhaPagamentoApplication`, que apenas inicializa a aplicação. O plugin `pitest-junit5-plugin` habilita a descoberta dos testes JUnit 5.
+
+Abra `target/pit-reports/index.html` para consultar a cobertura e os mutantes eliminados, sobreviventes ou sem cobertura. O arquivo `target/pit-reports/mutations.xml` contém os resultados em XML. Os relatórios são substituídos a cada execução e já estão ignorados pelo Git por estarem em `target/`.
+
+Os testes de mutação são executados apenas pelo comando acima; `mvn test` continua executando a suíte normal. Não há percentual mínimo de mutações eliminadas configurado inicialmente.
+
 ## Frontend
 
 Aplicação React 18, Vite e TypeScript em `frontend/`, com navegação pelo React Router, CSS responsivo e testes e2e contra a API real. Requer Java 17, Maven e Node.js 22.12 ou superior (recomendado: Node.js 22 LTS).

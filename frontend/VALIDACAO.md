@@ -25,3 +25,11 @@ No navegador da aplicação, foram exercitados cadastro, listagem, simulação, 
 Ambiente: Node.js 22.17.1, Java 17.0.14, React 18.3.1, Vite 8.3.4 e Cypress 16.2.0, com Electron 146 em modo headless.
 
 A execução do Java neste Windows exigiu configurar a pasta temporária de sockets em `target/java-sockets`. O comando alternativo está documentado no README da raiz. Nenhum arquivo do backend, `pom.xml` ou teste Java foi modificado. Não foram feitos commits nem push.
+
+## Correção dos dados de teste
+
+Na mesma data, foram identificados 95 cadastros deixados pelas execuções iniciais. A limpeza excluiu os 55 que não tinham folhas e retirou os identificadores do nome e do cargo dos outros 40, preservando suas folhas. O rótulo de validação do cadastro de demonstração da Maria Clara também foi removido. O cadastro do Lucas foi preservado.
+
+A suíte passou a rastrear os IDs criados por cada teste, inclusive os cadastros feitos pela interface. Em `afterEach`, remove apenas os seus próprios funcionários sem folhas e normaliza nome e cargo dos que têm folhas. Assim, os identificadores temporários não permanecem nos dados após o teste. Os vínculos e valores das folhas são preservados porque a API não oferece exclusão de folhas.
+
+Após essa alteração, o build e o lint foram aprovados, e duas novas rodadas consecutivas do Cypress passaram com 18/18 testes em cada uma, sem reiniciar o backend. A cópia anterior à limpeza foi salva localmente em `.dados-locais/`, fora do controle de versão.
